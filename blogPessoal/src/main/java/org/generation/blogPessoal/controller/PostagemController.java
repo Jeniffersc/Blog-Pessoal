@@ -1,7 +1,6 @@
 package org.generation.blogPessoal.controller;
 
 import java.util.List;
-
 import org.generation.blogPessoal.model.Postagem;
 import org.generation.blogPessoal.repository.PostagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +16,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/*
+ * Quando existir uma requisição, irá vim para essa classe de controler
+ */
+
 @RestController
 @RequestMapping("/postagens")
-@CrossOrigin("*")
-public class PostagemController {
+@CrossOrigin(origins = "*", allowedHeaders = "*") //Aceita requisições de qualquer origem, (exemplo Angular que sera aprendido no front)
 
+public class PostagemController 
+{
+	/*
+	 * Autowired esta usando a interface Repository para usar os métodos da JPA
+	 */
 	@Autowired
 	private PostagemRepository repositoty;
 	
 	@GetMapping
-	public ResponseEntity<List<Postagem>> GetAll() {
+	public ResponseEntity<List<Postagem>> GetAll(){
 		return ResponseEntity.ok(repositoty.findAll());
 	}
 	
-	@GetMapping ("/{id}")
-	public ResponseEntity<Postagem> GetById(@PathVariable long id) {
+	/*
+	 * End point - Ponto de acesso
+	 */
+	
+	/*
+	 * GetMapping - Fazer consulta
+	 */
+	@GetMapping("/{id}")
+	public ResponseEntity<Postagem> GetById(@PathVariable long id){
 		return repositoty.findById(id)
 				.map(resp -> ResponseEntity.ok(resp))
-					.orElse(ResponseEntity.notFound().build());
+				.orElse(ResponseEntity.notFound().build());
 	}
 	
 	@GetMapping("/titulo/{titulo}")
@@ -42,18 +56,28 @@ public class PostagemController {
 		return ResponseEntity.ok(repositoty.findAllByTituloContainingIgnoreCase(titulo));
 	}
 	
+	/*
+	 * PostMapping - Adicionar uma nova postagem  
+	 */
 	@PostMapping
 	public ResponseEntity<Postagem> post (@RequestBody Postagem postagem){
 		return ResponseEntity.status(HttpStatus.CREATED).body(repositoty.save(postagem));
 	}
 	
+	/*
+	 * PostMapping - Atualizar uma postagem ja existente
+	 */
 	@PutMapping
 	public ResponseEntity<Postagem> put (@RequestBody Postagem postagem){
 		return ResponseEntity.status(HttpStatus.OK).body(repositoty.save(postagem));
 	}
 	
+	/*
+	 * DeleteMapping - Deletar uma postagem 
+	 */
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable long id) {
 		repositoty.deleteById(id);
-	}
+	}	
 }
+
