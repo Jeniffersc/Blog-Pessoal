@@ -1,1 +1,2 @@
-# Projeto de Blog Pessoal desenvolvido no bootcamp da Generation Brasik 
+# Projeto de Blog Pessoal desenvolvido no bootcamp da Generation Brasil
+
